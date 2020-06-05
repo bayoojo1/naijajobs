@@ -31,10 +31,13 @@ if($message == "/start") {
     }
      
     welcomeMessage($sendPhoto_url,$chat_id,$text,$jobcat_keyboard);
+} else if($callback_data == "Frequently Asked Question(FAQ)") {
+    //Write the code here...
+    faq($sendMessage_url,$chat_id,$text,$jobcat_keyboard);
 } else if($callback_data == "jobcategories") {
     $chat_id = $callback_query["message"]["chat"]["id"];
     $text = "Select a category below:";
-    $cat_array = array("Agriculture, Food and Natural Resources", "Architecture and Construction", "Arts, Audio/Video Technology and Communications", "Business Management and Administration", "Education and Training", "Banking, Finance", "Health Science", "Hospitality and Tourism", "Human Services", "Information Technology", "Law, Public Safety, Corrections and Security", "Manufacturing", "Marketing, Sales and Service", "Science, Technology, Engineering", "Transportation, Distribution and Logistics", "Others");
+    $cat_array = array("Agriculture, Food and Natural Resources", "Architecture and Construction", "Arts, Audio/Video Technology and Communications", "Business Management and Administration", "Education and Training", "Banking, Finance", "Health Science", "Hospitality and Tourism", "Human Services", "Information Technology", "Law, Public Safety, Corrections and Security", "Manufacturing", "Marketing, Sales and Service", "Science, Technology, Engineering", "Transportation, Distribution and Logistics", "Others", "Frequently Asked Question(FAQ)");
     
     
     // Fetch categories from the database and send to user 
@@ -71,7 +74,8 @@ if($message == "/start") {
         array(array("text" => isset($category[12]) ? $category[12]. ' ' .$count[12] : "","callback_data" => isset($category[12]) ? $category[12] : "")),
         array(array("text" => isset($category[13]) ? $category[13]. ' ' .$count[13] : "","callback_data" => isset($category[13]) ? $category[13] : "")),
         array(array("text" => isset($category[14]) ? $category[14]. ' ' .$count[14] : "","callback_data" => isset($category[14]) ? $category[14] : "")),
-        array(array("text" => isset($category[15]) ? $category[15]. ' ' .$count[15] : "","callback_data" => isset($category[15]) ? $category[15] : ""))
+        array(array("text" => isset($category[15]) ? $category[15]. ' ' .$count[15] : "","callback_data" => isset($category[15]) ? $category[15] : "")),
+        array(array("text" => isset($category[16]) ? $category[16] : "","callback_data" => isset($category[16]) ? $category[16] : ""))
         )); 
   
     
