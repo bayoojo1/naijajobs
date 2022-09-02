@@ -74,8 +74,11 @@ $pageleft = '<div class="container text-center col-sm-offset-2">';
             $pageleft .= '</div>';
             $pageleft .= '<div id="sadminWidget" class="list-group">';
             $pageleft .= '<a id="manageuser" href="poll.php?u='.$log_username.'" class="list-group-item">Create Poll</a>';
+            $pageleft .= '<a id="statistics" href="stats.php?u='.$log_username.'" class="list-group-item">Site Statistics</a>';
             $pageleft .= '<a id="managebilling" href="sendphoto.php?u='.$log_username.'" class="list-group-item">Post Photo</a>';
-            $pageleft .= '<a id="registerbots" href="registerBots.php?u='.$log_username.'" class="list-group-item">Register Bot</a>';
+            $pageleft .= '<a id="registerbots" href="registerBots.php?u='.$log_username.'" class="list-group-item">Register Bot for first</a>';
+            $pageleft .= '<div><button type="button" >Post</button></div>';
+            $pageleft .= '<div><button type="button" >Post</button></div>';
             $pageleft .= '</div>';
             $pageleft .= '<button type="button" class="btn btn-success btn-lg" id="admUserReg">Post a Job</button>';
             

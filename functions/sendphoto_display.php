@@ -2,6 +2,7 @@
 include("../php_includes/mysqli_connect.php");
 $token = "1180159193:AAGmdFUATIfLWwy2jUiFWi5Anu-2aKRjz2w";
 $sendPhoto_Url = "https://api.telegram.org/bot$token/sendPhoto";
+$jobcat_keyboard = array("inline_keyboard" => array(array(array("text" => "Job Categories","callback_data" => "jobcategories")))); 
 //Get parameter sent by Ajax
 if(isset($_POST['filepath'])){
     $filepath = preg_replace('#[^-a-z0-9:.\/]#i', '', $_POST['filepath']);
@@ -23,7 +24,9 @@ if(isset($chatid) && !empty($chatid)) {
       $post = array(
           'chat_id' => $ct,
           'photo' => new CURLFile(realpath("$filepath")),
-          'caption' => $caption
+          'caption' => $caption,
+          'parse_mode' => 'HTML',
+          'reply_markup' => json_encode($jobcat_keyboard)
       );
       curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 
@@ -54,7 +57,9 @@ curl_close($ch);
      $post = array(
           'chat_id' => $chat_id,
           'photo' => new CURLFile(realpath("$filepath")),
-          'caption' => $caption
+          'caption' => $caption,
+          'parse_mode' => 'HTML',
+          'reply_markup' => json_encode($jobcat_keyboard)
       );
       curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 

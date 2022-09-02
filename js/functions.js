@@ -240,7 +240,7 @@ function admPostJob() {
         }
         xhttp.open('POST', 'functions/admjobposting.php', true)
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-        xhttp.send('admjobtitle=' + admjobtitle + '&admcompdesc=' + admcompdesc + '&admjobdesc=' + admjobdesc + '&admjobreqmt=' + admjobreqmt + '&admjobcategory=' + admjobcategory + '&admjobedu=' + admjobedu + '&admjobrenu=' + admjobrenu + '&admjobother=' + admjobother + '&admjobloc=' + admjobloc + '&admwebsite=' + admwebsite + '&admjobhow=' + admjobhow)
+        xhttp.send('admjobtitle=' + encodeURIComponent(admjobtitle) + '&admcompdesc=' + encodeURIComponent(admcompdesc) + '&admjobdesc=' + encodeURIComponent(admjobdesc) + '&admjobreqmt=' + encodeURIComponent(admjobreqmt) + '&admjobcategory=' + admjobcategory + '&admjobedu=' + encodeURIComponent(admjobedu) + '&admjobrenu=' + encodeURIComponent(admjobrenu) + '&admjobother=' + encodeURIComponent(admjobother) + '&admjobloc=' + encodeURIComponent(admjobloc) + '&admwebsite=' + encodeURIComponent(admwebsite) + '&admjobhow=' + encodeURIComponent(admjobhow))
       }
 }
 

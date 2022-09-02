@@ -22,11 +22,14 @@ if(isset($website) && !empty($website)) {
 } else {
     $howtoapply = $jobhow;
 }
+// Generate human readable posted date 
+$nowdate = date('Y-m-d');
+$readable_date = date("F d, Y",strtotime($nowdate));
 
 // Insert the values into the DB.
-$stmt = $db_connect->prepare("INSERT INTO jobslisting (username, job_title, company_desc, job_responsibility, qualification_skill, category, education_requirement, salary, benefit, location, howtoapply, datePosted)
-VALUES(:username, :job_title, :company_desc, :job_responsibility, :qualification_skill, :category, :education_requirement, :salary, :benefit, :location, :howtoapply, now())");
-if($stmt->execute(array(':username' => $log_username, ':job_title' => $jobtitle, ':company_desc' => $compdesc, ':job_responsibility' => $jobdesc, ':qualification_skill' => $jobreqmt, ':category' => $jobcategory, ':education_requirement' => $jobedu, ':salary' => $jobrenu, ':benefit' => $jobother, ':location' => $jobloc, ':howtoapply' => $howtoapply))) {
+$stmt = $db_connect->prepare("INSERT INTO jobslisting (username, job_title, company_desc, job_responsibility, qualification_skill, category, education_requirement, salary, benefit, location, howtoapply, readableDate, datePosted)
+VALUES(:username, :job_title, :company_desc, :job_responsibility, :qualification_skill, :category, :education_requirement, :salary, :benefit, :location, :howtoapply, :readableDate, now())");
+if($stmt->execute(array(':username' => $log_username, ':job_title' => $jobtitle, ':company_desc' => $compdesc, ':job_responsibility' => $jobdesc, ':qualification_skill' => $jobreqmt, ':category' => $jobcategory, ':education_requirement' => $jobedu, ':salary' => $jobrenu, ':benefit' => $jobother, ':location' => $jobloc, ':howtoapply' => $howtoapply, ':readableDate' => $readable_date))) {
     echo 'success';
 }
 ?>

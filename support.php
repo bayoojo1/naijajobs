@@ -94,7 +94,7 @@ $paginationCtrls = '<span>';
         $company = $row["company"];
         $about = $row["about"];
         $b = date_create($datePosted);
-        $readabledate = date_format($b, 'g:ia \o\n l jS F Y');
+        $readabledate = date_format($b, 'jS F, Y');
     // Update the user timeline
     echo '<div class="row" id="'.$profile_id.'">';
       echo '<div class="col-sm-12">';

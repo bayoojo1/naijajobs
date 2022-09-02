@@ -3,9 +3,9 @@ include("../php_includes/check_login_status.php");
 include("../php_includes/mysqli_connect.php");
 
 if(isset($_POST["jobtitle"])){
-    $jobtitle = preg_replace('#[^a-z0-9,\'.@&:;/() ]#i', '', $_POST["jobtitle"]);
-    $jobdesc = preg_replace('#[^a-z0-9,\'.@&:;/()\n ]#i', '', $_POST["jobdesc"]);
-    $jobreqmt = preg_replace('#[^a-z0-9,\'.@&:;/()\n ]#i', '', $_POST["jobreqmt"]);
+    $jobtitle = preg_replace('#[^a-z0-9,\'.@\&\#\%:;/() ]#i', '', $_POST["jobtitle"]);
+    $jobdesc = preg_replace('#[^a-z0-9,\'.@&\#:;/()\n ]#i', '', $_POST["jobdesc"]);
+    $jobreqmt = preg_replace('#[^a-z0-9,\'.@&\#:;/()\n ]#i', '', $_POST["jobreqmt"]);
     $jobcategory = preg_replace('#[^a-z0-9,\'.@&:;/()\n ]#i', '', $_POST["jobcategory"]);
     $jobedu = preg_replace('#[^a-z0-9,\'.@&:;/()\n ]#i', '', $_POST["jobedu"]);
     $jobrenu = preg_replace('#[^a-z0-9@&./: ]#i', '', $_POST["jobrenu"]);
@@ -32,11 +32,14 @@ if(isset($websiteUrl) && !empty($websiteUrl)) {
 } else {
     $howtoapply = $jobhow;
 }
+// Generate human readable posted date 
+$nowdate = date('Y-m-d');
+$readable_date = date("F d, Y",strtotime($nowdate));
 
 // Insert the values into the DB.
-$stmt = $db_connect->prepare("INSERT INTO jobslisting (username, job_title, job_responsibility, qualification_skill, category, education_requirement, salary, benefit, location, howtoapply, datePosted)
-VALUES(:username, :job_title, :job_responsibility, :qualification_skill, :category, :education_requirement, :salary, :benefit, :location, :howtoapply, now())");
-if($stmt->execute(array(':username' => $log_username, ':job_title' => $jobtitle, ':job_responsibility' => $jobdesc, ':qualification_skill' => $jobreqmt, ':category' => $jobcategory, ':education_requirement' => $jobedu, ':salary' => $jobrenu, ':benefit' => $jobother, ':location' => $jobloc, ':howtoapply' => $howtoapply))) {
+$stmt = $db_connect->prepare("INSERT INTO jobslisting (username, job_title, job_responsibility, qualification_skill, category, education_requirement, salary, benefit, location, howtoapply, readableDate, datePosted)
+VALUES(:username, :job_title, :job_responsibility, :qualification_skill, :category, :education_requirement, :salary, :benefit, :location, :howtoapply, :readableDate, now())");
+if($stmt->execute(array(':username' => $log_username, ':job_title' => $jobtitle, ':job_responsibility' => $jobdesc, ':qualification_skill' => $jobreqmt, ':category' => $jobcategory, ':education_requirement' => $jobedu, ':salary' => $jobrenu, ':benefit' => $jobother, ':location' => $jobloc, ':howtoapply' => $howtoapply, ':readableDate' => $readable_date))) {
     echo 'success';
 }
 ?>

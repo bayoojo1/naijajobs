@@ -2,7 +2,6 @@
 include("php_includes/mysqli_naijajobs_connect.php");
 include("functions/telegramBotsFunctions.php");
 include("functions/recordCategoryClicks.php");
-include("functions/faq.php");
 $update = json_decode(file_get_contents("php://input"), TRUE);
 $chat_id = isset($update["message"]["chat"]["id"]) ? $update["message"]["chat"]["id"] : "";
 $firstname = isset($update["message"]["chat"]["first_name"]) ? $update["message"]["chat"]["first_name"] : "";
@@ -32,12 +31,13 @@ if($message == "/start") {
     }
      
     welcomeMessage($sendPhoto_url,$chat_id,$text,$jobcat_keyboard);
-} else if($callback_data == "faq") {
+} else if($callback_data == "Frequently Asked Question(FAQ)") {
+    //Write the code here...
     faq($sendMessage_url,$chat_id,$text,$jobcat_keyboard);
 } else if($callback_data == "jobcategories") {
     $chat_id = $callback_query["message"]["chat"]["id"];
     $text = "Select a category below:";
-    $cat_array = array("Agriculture, Food and Natural Resources", "Architecture and Construction", "Arts, Audio/Video Technology and Communications", "Business Management and Administration", "Education and Training", "Banking, Finance", "Health Science", "Hospitality and Tourism", "Human Services", "Information Technology", "Law, Public Safety, Corrections and Security", "Manufacturing", "Marketing, Sales and Service", "Science, Technology, Engineering", "Transportation, Distribution and Logistics", "Others");
+    $cat_array = array("Agriculture, Food and Natural Resources", "Architecture and Construction", "Arts, Audio/Video Technology and Communications", "Business Management and Administration", "Education and Training", "Banking, Finance", "Health Science", "Hospitality and Tourism", "Human Services", "Information Technology", "Law, Public Safety, Corrections and Security", "Manufacturing", "Marketing, Sales and Service", "Science, Technology, Engineering", "Transportation, Distribution and Logistics", "Others", "Frequently Asked Question(FAQ)");
     
     
     // Fetch categories from the database and send to user 
@@ -58,12 +58,6 @@ if($message == "/start") {
           $count[] = $row['0'];
             }
           }
-        //Create a hash 
-        $somestr = $chat_id;
-        $secret = "You cannot hack this! So stop it.";
-        $string = trim("$secret"."$somestr");
-        $hash = md5 ($string);
-    
         $cat_keyboard = array("inline_keyboard" =>
         array(array(array("text" => isset($category[0]) ? $category[0]. ' ' .$count[0] : "","callback_data" => isset($category[0]) ? $category[0] : "")),
         array(array("text" => isset($category[1]) ? $category[1]. ' ' .$count[1] : "","callback_data" => isset($category[1]) ? $category[1] : "")),
@@ -81,15 +75,14 @@ if($message == "/start") {
         array(array("text" => isset($category[13]) ? $category[13]. ' ' .$count[13] : "","callback_data" => isset($category[13]) ? $category[13] : "")),
         array(array("text" => isset($category[14]) ? $category[14]. ' ' .$count[14] : "","callback_data" => isset($category[14]) ? $category[14] : "")),
         array(array("text" => isset($category[15]) ? $category[15]. ' ' .$count[15] : "","callback_data" => isset($category[15]) ? $category[15] : "")),
-        array(array("text" => "Frequently Asked Questions(FAQ)","callback_data" => "faq")),
-        array(array("text" => "Contact Naija Jobs Arena","url"=>"www.naijajobsarena.com/contactus/$chat_id/$hash"))
+        array(array("text" => isset($category[16]) ? $category[16] : "","callback_data" => isset($category[16]) ? $category[16] : ""))
         )); 
   
     
     
         showCategories($sendMessage_url,$chat_id,$text,$cat_keyboard);
 
-} else if(isset($callback_data) && !empty($callback_data) && $callback_data != "jobcategories" && $callback_data != "faq") {
+} else if(isset($callback_data) && !empty($callback_data) && $callback_data != "jobcategories") {
     $chat_id = $callback_query["message"]["chat"]["id"];
     //Call a function that records the number of click on this particular category 
     recordCategoryClicks($callback_data,$chat_id);
@@ -102,7 +95,7 @@ if($message == "/start") {
     $stmt->execute();
     if($stmt->rowCount() > 0) {
     
-    $sql = "SELECT jobslisting.id, job_title, company_desc, job_responsibility, qualification_skill, education_requirement, benefit, location, jobslisting.hash, howtoapply, salary, datePosted, readableDate,  users.company, users.about FROM jobslisting INNER JOIN users ON users.username = jobslisting.username WHERE (jobslisting.dbCategory = :category AND jobslisting.approval = :approval AND jobslisting.datePosted > NOW() -INTERVAL 1 WEEK) ORDER BY RAND() LIMIT 5";
+    $sql = "SELECT jobslisting.id, job_title, company_desc, job_responsibility, qualification_skill, education_requirement, benefit, location, jobslisting.hash, howtoapply, salary, datePosted, users.company, users.about FROM jobslisting INNER JOIN users ON users.username = jobslisting.username WHERE (jobslisting.dbCategory = :category AND jobslisting.approval = :approval AND jobslisting.datePosted > NOW() -INTERVAL 1 WEEK) ORDER BY RAND() LIMIT 5";
     $stmt = $db_connect->prepare($sql);
     $stmt->bindParam(':category', $callback_data, PDO::PARAM_STR);
     $stmt->bindValue(':approval', 'Yes', PDO::PARAM_STR);
@@ -124,7 +117,6 @@ if($message == "/start") {
         $companyName = $row['company'];
         $about = $row['about'];
         $datePosted = $row['datePosted'];
-        $readable_date = $row['readableDate'];
         //}
         
         $keyboard = array("inline_keyboard" => array(array(array("text" => "Report this job","url" => "www.naijajobsarena.com/reportjob/$jobTitle/$job_id/$hash"),array("text" => "Job Categories","callback_data" => "jobcategories" ))));
@@ -181,23 +173,16 @@ if($message == "/start") {
     $text .= '<b>#To #Apply:</b>';
     $text .= "\n";
     if(filter_var('http://'.$howtoapply, FILTER_VALIDATE_URL)) {
-    $text .= ' Visit: ' .$howtoapply;
+    $text .= ' Visit our website: ' .$howtoapply;
     $text .= "\n";
     } else {
     $text .= $howtoapply;
     $text .= "\n"; 
     }
-    if(isset($readable_date) && !empty($readable_date)) {
-        $text .= '<b>#Date #Posted:</b>';
-        $text .= "\n";
-        $text .=  $readable_date;
-        $text .= "\n";
-    } else {
-        $text .= '<b>#Date #Posted:</b>';
-        $text .= "\n";
-        $text .=  $datePosted;
-        $text .= "\n";
-    }
+    $text .= '<b>#Date #Posted:</b>';
+    $text .= "\n";
+    $text .=  $datePosted;
+    $text .= "\n";
     $text .= "\n";
     $text .= "##########################";
     $text .= "\n";
